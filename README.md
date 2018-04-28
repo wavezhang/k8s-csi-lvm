@@ -1,4 +1,4 @@
-## Overview 
+## Overview [![Build Status](https://travis-ci.org/wavezhang/k8s-csi-lvm.svg?branch=master)](https://travis-ci.org/wavezhang/k8s-csi-lvm)
 
 Kubernetes LVM CSI plugin is developed to manage local storage dynamically on kubernetes.
 
