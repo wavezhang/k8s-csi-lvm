@@ -1,0 +1,10 @@
+[Unit]
+Description=LVMD daemon
+
+[Service]
+Type=simple
+ExecStart=/usr/bin/lvmd -v 5 -listen 0.0.0.0:1736 -logtostderr
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
