@@ -26,6 +26,9 @@ lvm:
 lvm-container: lvm
 	docker build -t $(REGISTRY_NAME)/lvmplugin:$(IMAGE_VERSION) ./deploy/docker/
 
+push-lvm-container: lvm-container
+	docker push $(REGISTRY_NAME):$(IMAGE_VERSION)
+
 clean:
 	go clean -r -x
 	rm -f deploy/docker/lvmplugin

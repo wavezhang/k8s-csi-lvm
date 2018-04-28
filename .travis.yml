@@ -7,12 +7,8 @@ before_install:
   - go get -u github.com/golang/dep/cmd/dep
 
 script:
-  - if [ ! -d ./vendor ]; then dep ensure; fi
-  - CGO_ENABLED=0 GOOS=linux go build -a -ldflags '-extldflags "-static"' -o ./deploy/docker/lvmplugin ./cmd/k8s-csi-lvm/
+  - make lvm-container
 
 after_success:
-  - cd ./cmd/deploy/docker
-  - git init
-  - git add --all .
-  - git commit -m "Travis CI Auto Builder"
-  - git push --quiet --force https://$REPO_TOKEN@github.com/wavezhang/k8s-csi-lvm.git deploy
+  - docker login -u "${QUAY_IO_USERNAME}" -p "${QUAY_IO_PASSWORD}" quay.io 
+  - make push-lvm-container
