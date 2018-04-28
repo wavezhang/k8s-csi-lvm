@@ -6,8 +6,8 @@ Kubernetes LVM CSI plugin is developed to manage local storage dynamically on ku
 
 ## Deploy
 
-1. kube-apiserver must be launched with --feature-gates=CSIPersistentVolume=true,MountPropagation=true and --runtime-config=storage.k8s.io/v1alpha1=true
-2. Exec deploy/node.sh on all nodes of kubernetes.
+1. kube-apiserver must be launched with ```--feature-gates=CSIPersistentVolume=true,MountPropagation=true``` and ```--runtime-config=storage.k8s.io/v1alpha1=true```
+2. Exec ```deploy/node.sh``` on all nodes of kubernetes.
 3. On master node, exec
 ```bash
 kubectl create -f deploy/kubernetes
