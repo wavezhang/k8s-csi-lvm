@@ -76,7 +76,6 @@ spec:
         app: csi-provisioner
     spec:
       serviceAccount: csi-provisioner
-      nodeName: compute05
       containers:
         - name: csi-provisioner
           image: quay.io/k8scsi/csi-provisioner:v0.2.0
