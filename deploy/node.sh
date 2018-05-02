@@ -19,7 +19,8 @@ if [ $res -ne 0 ]; then
 fi
 
 echo "Creating PV for $DEVS"
-res=pvcreate -y $DEVS
+pvcreate -y $DEVS
+res=$?
 if [ $res -ne 0 ]; then
     exit $res
 fi
