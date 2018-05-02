@@ -13,10 +13,6 @@ done
 
 echo "Force umounting $DEVS"
 umount -l $DEVS
-res=$?
-if [ $res -ne 0 ]; then
-    exit $res
-fi
 
 echo "Creating PV for $DEVS"
 pvcreate -y $DEVS
