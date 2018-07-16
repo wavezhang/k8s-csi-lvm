@@ -70,6 +70,7 @@ func (ns *nodeServer) createVolume(ctx context.Context, volumeId string) (*v1.Pe
 	}
 
 	conn, err := lvmd.NewLVMConnection(addr, connectTimeout)
+	defer conn.Close()
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, fmt.Sprintf("Failed to connect to %v: %v", addr, err))
 	}

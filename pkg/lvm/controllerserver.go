@@ -80,6 +80,7 @@ func (cs *controllerServer) DeleteVolume(ctx context.Context, req *csi.DeleteVol
 		}
 
 		conn, err := lvmd.NewLVMConnection(addr, connectTimeout)
+		defer conn.Close()
 		if err != nil {
 			return nil, status.Error(codes.Internal, fmt.Sprintf("Failed to connect to %v: %v", addr, err))
 		}
