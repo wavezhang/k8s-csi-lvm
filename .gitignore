@@ -64,8 +64,6 @@ cscope.*
 
 # Godeps or dep workspace
 /Godeps/_workspace
-vendor
-vendor.*
 
 /bazel-*
 *.pyc

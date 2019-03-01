@@ -13,7 +13,7 @@
 # limitations under the License.
 
 REGISTRY_NAME = quay.io/lvmcsi
-IMAGE_VERSION = v0.2.1
+IMAGE_VERSION = v0.3.0
 
 .PHONY: all lvm clean
 
