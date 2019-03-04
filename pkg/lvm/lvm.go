@@ -38,7 +38,7 @@ type lvm struct {
 
 var (
 	lvmDriver     *lvm
-	vendorVersion = "0.2.0"
+	vendorVersion = "0.3.0"
 )
 
 func GetLVMDriver(client kubernetes.Interface) *lvm {
