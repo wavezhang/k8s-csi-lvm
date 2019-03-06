@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: csi-lvm-test
+  namespace: default
+spec:
+  restartPolicy: Never
+  volumes:
+  - name: vol
+    persistentVolumeClaim:
+      claimName: csi-lvm
+  containers:
+  - name: csi-lvm-test
+    image: "busybox"
+    command: ["/bin/sh", "-c", "sleep 3600000"]
+    resources:
+      limits:
+        paas.com/lvm: 1Gi
+
+    volumeMounts:
+    - name: vol
+      mountPath: /vol
