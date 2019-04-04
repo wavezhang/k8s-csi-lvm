@@ -51,22 +51,24 @@ func NewIdentityServer(d *csicommon.CSIDriver) *identityServer {
 	}
 }
 
-func NewControllerServer(d *csicommon.CSIDriver, c kubernetes.Interface) *controllerServer {
+func NewControllerServer(d *csicommon.CSIDriver, c kubernetes.Interface, vgName string) *controllerServer {
 	return &controllerServer{
 		DefaultControllerServer: csicommon.NewDefaultControllerServer(d),
 		client:                  c,
+		vgName:            vgName,
 	}
 }
 
-func NewNodeServer(d *csicommon.CSIDriver, c kubernetes.Interface, nodeID string) *nodeServer {
+func NewNodeServer(d *csicommon.CSIDriver, c kubernetes.Interface, nodeID string, vgName string) *nodeServer {
 	return &nodeServer{
 		DefaultNodeServer: csicommon.NewDefaultNodeServer(d),
 		client:            c,
 		nodeID:            nodeID,
+		vgName:            vgName,
 	}
 }
 
-func (lvm *lvm) Run(driverName, nodeID, endpoint string) {
+func (lvm *lvm) Run(driverName, nodeID, endpoint string, vgName string) {
 	glog.Infof("Driver: %v ", driverName)
 
 	// Initialize default library driver
@@ -80,8 +82,8 @@ func (lvm *lvm) Run(driverName, nodeID, endpoint string) {
 
 	// Create GRPC servers
 	lvm.ids = NewIdentityServer(lvm.driver)
-	lvm.ns = NewNodeServer(lvm.driver, lvm.client, nodeID)
-	lvm.cs = NewControllerServer(lvm.driver, lvm.client)
+	lvm.ns = NewNodeServer(lvm.driver, lvm.client, nodeID, vgName)
+	lvm.cs = NewControllerServer(lvm.driver, lvm.client, vgName)
 
 	server := csicommon.NewNonBlockingGRPCServer()
 	server.Start(endpoint, lvm.ids, lvm.cs, lvm.ns)

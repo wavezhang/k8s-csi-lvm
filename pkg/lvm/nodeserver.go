@@ -41,6 +41,7 @@ type nodeServer struct {
 	*csicommon.DefaultNodeServer
 	client kubernetes.Interface
 	nodeID string
+	vgName string
 }
 
 func (ns *nodeServer) GetNodeID() string {
@@ -76,7 +77,7 @@ func (ns *nodeServer) createVolume(ctx context.Context, volumeId string) (*v1.Pe
 	}
 
 	resp, err := conn.CreateLV(ctx, &lvmd.LVMOptions{
-		VolumeGroup: defVgName,
+		VolumeGroup: ns.vgName,
 		Name:        volumeId,
 		Size:        uint64(size),
 	})
@@ -100,7 +101,7 @@ func (ns *nodeServer) NodePublishVolume(ctx context.Context, req *csi.NodePublis
 	// devicePath := req.GetPublishInfo()["DevicePath"]
 
 	volumeId := req.GetVolumeId()
-	devicePath := filepath.Join("/dev/", defVgName, volumeId)
+	devicePath := filepath.Join("/dev/", ns.vgName, volumeId)
 
 	if _, err := os.Stat(devicePath); os.IsNotExist(err) {
 		_, err := ns.createVolume(ctx, volumeId)

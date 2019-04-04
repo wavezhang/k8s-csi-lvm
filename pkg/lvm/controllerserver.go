@@ -32,7 +32,6 @@ import (
 )
 
 const (
-	defVgName      = "k8s"
 	defaultFs      = "ext4"
 	connectTimeout = 3 * time.Second
 )
@@ -40,6 +39,7 @@ const (
 type controllerServer struct {
 	*csicommon.DefaultControllerServer
 	client kubernetes.Interface
+	vgName string
 }
 
 func (cs *controllerServer) CreateVolume(ctx context.Context, req *csi.CreateVolumeRequest) (*csi.CreateVolumeResponse, error) {
@@ -85,8 +85,8 @@ func (cs *controllerServer) DeleteVolume(ctx context.Context, req *csi.DeleteVol
 			return nil, status.Error(codes.Internal, fmt.Sprintf("Failed to connect to %v: %v", addr, err))
 		}
 
-		if _, err := conn.GetLV(ctx, defVgName, vid); err == nil {
-			if err := conn.RemoveLV(ctx, defVgName, vid); err != nil {
+		if _, err := conn.GetLV(ctx, cs.vgName, vid); err == nil {
+			if err := conn.RemoveLV(ctx, cs.vgName, vid); err != nil {
 				return nil, status.Errorf(
 					codes.Internal,
 					"Failed to remove volume: err=%v",
