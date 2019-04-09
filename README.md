@@ -12,6 +12,13 @@ Kubernetes LVM CSI plugin is developed to manage local storage dynamically on ku
 ```bash
 kubectl create -f deploy/kubernetes
 ```
+4. If you need aware node lvm capacity when schedule, on master node, exec ```deploy/capacity.sh``` and when using lvm in pod add  requests like following:
+```yaml
+    resources:
+      limits:
+        paas.com/lvm: 1Gi
+```      
+
 
 ## Usage
 
