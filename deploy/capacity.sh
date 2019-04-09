@@ -1,11 +1,12 @@
 #!/bin/bash
 
 # run on master only
+VGNAME=k8s
 kubectl proxy &
 nodes=`kubectl get nodes |grep -v NAME |awk '{print $1}'`
 for n in $nodes; do
   ip=`kubectl describe node $n| grep InternalIP | awk '{print $2}'`
-  size=`ssh $ip "vgdisplay k8s --unit=m | grep Free" | awk '{print \$7}'`
+  size=`ssh $ip "vgdisplay $VGNAME --unit=m | grep Free" | awk '{print \$7}'`
   curl -s --header "Content-Type: application/json-patch+json" \
   --request PATCH \
   --data "[{\"op\": \"add\", \"path\": \"/status/capacity/paas.com~1lvm\", \"value\": \"${size}Mi\"}]" \
