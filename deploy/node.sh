@@ -1,3 +1,7 @@
+#!/bin/bash
+
+cd `dirname $0`
+
 yum install -y lvm2  
 cp lvmd/lvmd /usr/bin/
 cp lvmd/lvmd.service /usr/lib/systemd/system/
