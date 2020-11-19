@@ -19,7 +19,7 @@ package lvm
 import (
 	"github.com/golang/glog"
 	"k8s.io/client-go/kubernetes"
-	"github.com/container-storage-interface/spec/lib/go/csi/v0"
+	"github.com/container-storage-interface/spec/lib/go/csi"
 
 	"github.com/kubernetes-csi/drivers/pkg/csi-common"
 )

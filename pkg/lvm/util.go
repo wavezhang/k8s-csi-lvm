@@ -3,21 +3,40 @@ package lvm
 import (
 	"errors"
 	"fmt"
+	"math"
+	"context"
 	"os/exec"
 	"strings"
 
 	"k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
-	"k8s.io/kubernetes/pkg/kubelet/apis"
 	utilnode "k8s.io/kubernetes/pkg/util/node"
+	"k8s.io/cloud-provider/volume/helpers"
 )
 
 const (
 	lvmNodeAnnKey = "lvm/node"
-	NodeLabelKey  = apis.LabelHostname
+	NodeLabelKey  = v1.LabelHostname
 	lvmdPort      = "1736"
 )
+
+// RoundOffBytes converts roundoff the size
+// 1.1Mib will be round off to 2Mib same for GiB
+// size less than 1MiB will be round off to 1MiB.
+func RoundOffBytes(bytes int64) int64 {
+	var num int64
+	floatBytes := float64(bytes)
+	// round off the value if its in decimal
+	if floatBytes < helpers.GiB {
+		num = int64(math.Ceil(floatBytes / helpers.MiB))
+		num *= helpers.MiB
+	} else {
+		num = int64(math.Ceil(floatBytes / helpers.GiB))
+		num *= helpers.GiB
+	}
+	return num
+}
 
 func getLVMDAddr(client kubernetes.Interface, node string) (string, error) {
 	n, err := getNode(client, node)
@@ -32,15 +51,15 @@ func getLVMDAddr(client kubernetes.Interface, node string) (string, error) {
 }
 
 func updatePV(client kubernetes.Interface, pv *v1.PersistentVolume) (*v1.PersistentVolume, error) {
-	return client.CoreV1().PersistentVolumes().Update(pv)
+	return client.CoreV1().PersistentVolumes().Update(context.TODO(), pv, metav1.UpdateOptions{})
 }
 
 func getPV(client kubernetes.Interface, volumeId string) (*v1.PersistentVolume, error) {
-	return client.CoreV1().PersistentVolumes().Get(volumeId, metav1.GetOptions{})
+	return client.CoreV1().PersistentVolumes().Get(context.TODO(), volumeId, metav1.GetOptions{})
 }
 
 func getNode(client kubernetes.Interface, nodeId string) (*v1.Node, error) {
-	return client.CoreV1().Nodes().Get(nodeId, metav1.GetOptions{})
+	return client.CoreV1().Nodes().Get(context.TODO(), nodeId, metav1.GetOptions{})
 }
 
 func getVolumeNode(client kubernetes.Interface, volumeId string) (string, error) {

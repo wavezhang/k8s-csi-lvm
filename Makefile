@@ -13,15 +13,14 @@
 # limitations under the License.
 
 REGISTRY_NAME = quay.io/lvmcsi
-IMAGE_VERSION = v0.3.1
+IMAGE_VERSION = v1.0.0
 
 .PHONY: all lvm clean
 
 all: lvm
 
 lvm:
-	if [ ! -d ./vendor ]; then dep ensure; fi
-	CGO_ENABLED=0 GOOS=linux go build -a -ldflags '-extldflags "-static"' -o ./deploy/docker/lvmplugin ./cmd/k8s-csi-lvm/
+	GO111MODULE=on GOPROXY=https://goproxy.io CGO_ENABLED=0 GOOS=linux GOARCH=amd64 GO111MODULE=on go build -mod vendor -a -ldflags '-extldflags "-static"' -o ./deploy/docker/lvmplugin ./cmd/k8s-csi-lvm/
 
 lvm-container: lvm
 	docker build -t $(REGISTRY_NAME)/lvmplugin:$(IMAGE_VERSION) ./deploy/docker/
